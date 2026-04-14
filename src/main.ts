@@ -32,15 +32,7 @@ if (!app) throw new Error("#app not found");
 
 app.innerHTML = `
   <div id="viewer"></div>
-  <aside class="panel">
-    <h1>个人简介 · 三维地球</h1>
-    <p>初始为中国视角，显示全球国界与中国省界。</p>
-    <p>点击中国境内任意省份区域，镜头自动切换到该省，并加载该省市界。</p>
-    <p id="status">当前：全国视角（中国）</p>
-  </aside>
 `;
-
-const statusEl = document.querySelector<HTMLParagraphElement>("#status");
 
 // Cesium 场景初始化：
 // - 精简控件，突出地球主视图
@@ -83,9 +75,6 @@ let clickedPointEntity: Cesium.Entity | null = null;
 
 const toCartesian = ([lng, lat]: Position) => Cesium.Cartesian3.fromDegrees(lng, lat);
 
-const setStatus = (text: string) => {
-  if (statusEl) statusEl.textContent = `当前：${text}`;
-};
 
 // 同时支持 URL 字符串和已加载对象，
 // 让 drawBoundaryLayer 可复用在静态与动态数据源上。
@@ -210,7 +199,6 @@ const boot = async () => {
     await drawBoundaryLayer(COUNTRY_URL, Cesium.Color.fromCssColorString("#4dd0e1"), 1.1);
   } catch (error) {
     console.warn("country boundary load failed", error);
-    setStatus("全球国界加载失败，已跳过");
   }
   await drawBoundaryLayer(CHINA_PROVINCE_URL, Cesium.Color.fromCssColorString("#ff7043"), 2.1);
 
@@ -218,25 +206,36 @@ const boot = async () => {
   const response = await fetch(CHINA_PROVINCE_URL);
   provinceGeo = (await response.json()) as GeoCollection;
 
-  // 首页视角目标：
-  // - 首屏完整看到地球
-  // - 球心与页面中心对齐
-  // - 朝向中国区域
-  const homeView = {
-    destination: Cesium.Cartesian3.fromDegrees(104.0, 20.0, 21000000),
+  // 初始动画开始时的原始视角（保持不变）。
+  const initialView = {
+    destination: Cesium.Cartesian3.fromDegrees(104.0, 35.8, 23000000),
     orientation: {
       heading: 0,
       pitch: Cesium.Math.toRadians(-90),
       roll: 0,
     },
   };
+
+  // 最终落点视角：根据截图反推，聚焦中国并覆盖东亚主要区域。
+  const finalView = {
+    destination: Cesium.Cartesian3.fromDegrees(104.5, 34.5, 9800000),
+    orientation: {
+      heading: 0,
+      pitch: Cesium.Math.toRadians(-90),
+      roll: 0,
+    },
+  };
+
   viewer.camera.flyTo({
-    destination: homeView.destination,
-    orientation: homeView.orientation,
-    duration: 2.2,
+    destination: initialView.destination,
+    orientation: initialView.orientation,
+    duration: 1.8,
     complete: () => {
-      // 飞行动画结束后再 setView 一次，避免极小的姿态漂移。
-      viewer.camera.setView(homeView);
+      viewer.camera.flyTo({
+        destination: finalView.destination,
+        orientation: finalView.orientation,
+        duration: 1.6,
+      });
     },
   });
 
@@ -265,8 +264,7 @@ const boot = async () => {
 
     const center = centerOfFeature(province) ?? [lng, lat];
     viewer.camera.flyTo({
-      // 略微抬高纬度，配合俯仰角时视觉中心更自然。
-      destination: toCartesian([center[0], center[1] + 0.15]).clone(),
+      destination: toCartesian([center[0], center[1]]).clone(),
       duration: 1.8,
       orientation: {
         heading: 0,
@@ -274,12 +272,9 @@ const boot = async () => {
         roll: 0,
       },
     });
-
-    setStatus(`${province.properties.name ?? "未知省份"}（已加载市界）`);
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 };
 
 boot().catch((error: unknown) => {
-  setStatus("数据加载失败，请检查网络连接");
   console.error(error);
 });
