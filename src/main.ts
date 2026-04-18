@@ -36,7 +36,6 @@ app.innerHTML = `
 
 // Cesium 场景初始化：
 // - 精简控件，突出地球主视图
-// - 使用卫星底图
 // - 关闭地形，避免大规模行政区几何在某些情况下触发渲染边界问题
 const viewer = new Cesium.Viewer("viewer", {
   animation: false,
@@ -50,12 +49,28 @@ const viewer = new Cesium.Viewer("viewer", {
   fullscreenButton: false,
   selectionIndicator: false,
   terrain: undefined,
-  baseLayer: Cesium.ImageryLayer.fromProviderAsync(
-    Cesium.ArcGisMapServerImageryProvider.fromUrl(
-      "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
-    )
-  ),
 });
+
+// 使用 Cesium 内置全球影像底图，避免外部瓦片服务在某些网络下返回黑图。
+const installSatelliteLayer = async () => {
+  viewer.imageryLayers.removeAll();
+  try {
+    const naturalEarthProvider = await Cesium.TileMapServiceImageryProvider.fromUrl(
+      Cesium.buildModuleUrl("Assets/Textures/NaturalEarthII")
+    );
+    viewer.imageryLayers.addImageryProvider(naturalEarthProvider);
+  } catch (error) {
+    // 若本地影像异常，再回退到 OSM。
+    viewer.imageryLayers.addImageryProvider(
+      new Cesium.OpenStreetMapImageryProvider({
+        url: "https://tile.openstreetmap.org/",
+      })
+    );
+    console.warn("内置影像加载失败，已回退到 OSM 底图。", error);
+  }
+};
+
+void installSatelliteLayer();
 
 viewer.scene.globe.depthTestAgainstTerrain = false;
 viewer.scene.screenSpaceCameraController.minimumZoomDistance = 700000;
@@ -194,18 +209,6 @@ const markClickedPoint = (position: Cesium.Cartesian3) => {
 };
 
 const boot = async () => {
-  // 全球国界属于增强信息：即使加载失败，也不影响主流程继续运行。
-  try {
-    await drawBoundaryLayer(COUNTRY_URL, Cesium.Color.fromCssColorString("#4dd0e1"), 1.1);
-  } catch (error) {
-    console.warn("country boundary load failed", error);
-  }
-  await drawBoundaryLayer(CHINA_PROVINCE_URL, Cesium.Color.fromCssColorString("#ff7043"), 2.1);
-
-  // 再取一份省界原始数据，用于后续点选命中判定。
-  const response = await fetch(CHINA_PROVINCE_URL);
-  provinceGeo = (await response.json()) as GeoCollection;
-
   // 初始动画开始时的原始视角（保持不变）。
   const initialView = {
     destination: Cesium.Cartesian3.fromDegrees(104.0, 35.8, 23000000),
@@ -238,6 +241,23 @@ const boot = async () => {
       });
     },
   });
+
+  // 全球国界属于增强信息：即使加载失败，也不影响主流程继续运行。
+  try {
+    await drawBoundaryLayer(COUNTRY_URL, Cesium.Color.fromCssColorString("#4dd0e1"), 1.1);
+  } catch (error) {
+    console.warn("country boundary load failed", error);
+  }
+
+  // 省界和省份判定数据若加载失败，只影响点击钻取，不影响底图显示与基础视角。
+  try {
+    await drawBoundaryLayer(CHINA_PROVINCE_URL, Cesium.Color.fromCssColorString("#ff7043"), 2.1);
+    const response = await fetch(CHINA_PROVINCE_URL);
+    provinceGeo = (await response.json()) as GeoCollection;
+  } catch (error) {
+    provinceGeo = null;
+    console.warn("province boundary load failed", error);
+  }
 
   const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
   handler.setInputAction(async (movement: Cesium.ScreenSpaceEventHandler.PositionedEvent) => {
