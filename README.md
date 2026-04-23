@@ -34,6 +34,15 @@ npm run build
 npm run preview
 ```
 
+如果你希望按“纯静态文件”方式验证（接近实际部署）：
+
+```bash
+npm run build
+npx http-server dist -p 4173
+```
+
+然后访问：`http://localhost:4173`
+
 ## 目录结构
 
 ```text
