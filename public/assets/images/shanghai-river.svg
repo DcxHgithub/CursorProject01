@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2d3d81" />
+      <stop offset="100%" stop-color="#10142a" />
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)" />
+  <rect y="450" width="1280" height="270" fill="#22346d" />
+  <ellipse cx="640" cy="450" rx="620" ry="64" fill="#4259a7" opacity="0.44" />
+  <circle cx="220" cy="160" r="42" fill="#ffd86c" />
+  <g fill="#f0f4ff" opacity="0.9">
+    <rect x="200" y="252" width="66" height="198" />
+    <rect x="292" y="208" width="84" height="242" />
+    <rect x="412" y="228" width="88" height="222" />
+    <rect x="530" y="182" width="70" height="268" />
+    <rect x="640" y="224" width="92" height="226" />
+    <rect x="760" y="188" width="62" height="262" />
+    <rect x="856" y="235" width="84" height="215" />
+    <rect x="972" y="204" width="72" height="246" />
+  </g>
+  <rect x="70" y="560" width="500" height="120" rx="20" fill="#101935" opacity="0.82" />
+  <text x="112" y="632" fill="#f4f8ff" font-size="58" font-family="Arial, sans-serif">é_Î</text>
+</svg>

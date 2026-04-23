@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">'1wå=</title>
+  <desc id="desc">–rå=VbqÎ<`Mþ</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f7bc84" />
+      <stop offset="58%" stop-color="#c47a72" />
+      <stop offset="100%" stop-color="#4f628f" />
+    </linearGradient>
+    <linearGradient id="water" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#7aa8c6" />
+      <stop offset="100%" stop-color="#4f6f9c" />
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#sky)" />
+  <circle cx="760" cy="245" r="86" fill="#ffd8a1" opacity="0.92" />
+  <path d="M0 410 L260 350 L520 398 L760 340 L1020 380 L1280 346 L1280 500 L0 500 Z" fill="#6e5f75" opacity="0.65" />
+  <rect x="0" y="500" width="1280" height="220" fill="url(#water)" />
+  <g opacity="0.26" stroke="#dbeaf8" stroke-width="3">
+    <line x1="80" y1="560" x2="1180" y2="560" />
+    <line x1="150" y1="602" x2="1110" y2="602" />
+    <line x1="210" y1="644" x2="1040" y2="644" />
+  </g>
+  <rect x="70" y="520" width="330" height="130" rx="22" fill="#101821" opacity="0.84" />
+  <text x="105" y="595" fill="#f9f4e9" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="42">1w®r</text>
+</svg>
