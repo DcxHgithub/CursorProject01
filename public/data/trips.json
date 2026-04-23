@@ -1,0 +1,49 @@
+{
+  "defaultTripId": 1,
+  "trips": [
+    {
+      "id": 1,
+      "name": "大理古城",
+      "lat": 25.6065,
+      "lng": 100.2676,
+      "date": "2024-04-10",
+      "images": [
+        "assets/images/dali-sunset.svg",
+        "assets/images/dali-street.svg"
+      ],
+      "videos": [
+        "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+      ],
+      "description": "全家一起在洱海边看日落，晚风和笑声都很温柔。",
+      "audio": "https://cdn.pixabay.com/download/audio/2021/08/04/audio_c93de52f96.mp3?filename=sea-waves-ambient-11445.mp3"
+    },
+    {
+      "id": 2,
+      "name": "上海外滩",
+      "lat": 31.2401,
+      "lng": 121.4905,
+      "date": "2023-10-03",
+      "images": [
+        "assets/images/shanghai-night.svg",
+        "assets/images/shanghai-river.svg"
+      ],
+      "videos": [
+        "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm"
+      ],
+      "description": "夜幕下沿江散步，孩子第一次看见黄浦江两岸的霓虹。"
+    },
+    {
+      "id": 3,
+      "name": "成都 · 熊猫基地",
+      "lat": 30.7334,
+      "lng": 104.1447,
+      "date": "2022-07-18",
+      "images": [
+        "assets/images/chengdu-panda.svg",
+        "assets/images/chengdu-food.svg"
+      ],
+      "videos": [],
+      "description": "看熊猫、吃火锅、逛公园，是一次轻松又热闹的夏天旅行。"
+    }
+  ]
+}

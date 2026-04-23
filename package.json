@@ -9,13 +9,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/three": "^0.184.0",
     "typescript": "~6.0.2",
     "vite": "^8.0.4"
   },
   "dependencies": {
-    "@turf/boolean-point-in-polygon": "^7.3.4",
-    "@turf/helpers": "^7.3.4",
-    "cesium": "^1.140.0",
-    "vite-plugin-cesium": "^1.2.23"
+    "three": "^0.184.0"
   }
 }
